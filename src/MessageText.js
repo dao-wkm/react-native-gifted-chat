@@ -38,6 +38,13 @@ export default class MessageText extends React.Component {
     }
   }
 
+  onFilePress = () => {
+    const { currentMessage } = this.props;
+    if (currentMessage && currentMessage.file) {
+      this.onUrlPress(currentMessage.file);
+    }
+  }
+
   onPhonePress(phone) {
     const options = ['Call', 'Text', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
@@ -77,6 +84,8 @@ export default class MessageText extends React.Component {
           ]}
           parse={[
             ...this.props.parsePatterns(linkStyle),
+            { pattern: /^[\w,\s-]+\.(doc|docx|pdf)$/, style: linkStyle, onPress: this.onFilePress },
+            { type: 'url', style: linkStyle, onPress: this.onUrlPress },
             { type: 'url', style: linkStyle, onPress: this.onUrlPress },
             { type: 'phone', style: linkStyle, onPress: this.onPhonePress },
             { type: 'email', style: linkStyle, onPress: this.onEmailPress },
