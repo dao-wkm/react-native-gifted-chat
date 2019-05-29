@@ -73,7 +73,12 @@ export default class MessageText extends React.Component {
   }
 
   render() {
+    const { currentMessage } = this.props;
     const linkStyle = StyleSheet.flatten([styles[this.props.position].link, this.props.linkStyle[this.props.position]]);
+    const fileParsePatterns = [];
+    if (currentMessage && currentMessage.file) {
+      fileParsePatterns.push({ pattern: /^[\w,\s-]+\.(doc|docx|pdf)$/, style: linkStyle, onPress: this.onFilePress });
+    }
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
         <ParsedText
@@ -84,7 +89,7 @@ export default class MessageText extends React.Component {
           ]}
           parse={[
             ...this.props.parsePatterns(linkStyle),
-            { pattern: /^[\w,\s-]+\.(doc|docx|pdf)$/, style: linkStyle, onPress: this.onFilePress },
+            ...fileParsePatterns,
             { type: 'url', style: linkStyle, onPress: this.onUrlPress },
             { type: 'url', style: linkStyle, onPress: this.onUrlPress },
             { type: 'phone', style: linkStyle, onPress: this.onPhonePress },
